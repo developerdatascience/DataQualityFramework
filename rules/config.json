@@ -1,0 +1,107 @@
+[
+    
+    {
+        "name": "null_check_customer_id",
+        "type": "null_check",
+        "column": "customer_id",
+        "priority": 1,
+        "entity": "customers"
+    },
+    {
+        "name": "unique_order_id",
+        "type": "unique_check",
+        "column": "order_id",
+        "priority": 1,
+        "entity": "orders"
+    },
+
+    
+    {
+        "name": "email_format_validation",
+        "type": "regex_match",
+        "column": "email",
+        "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        "priority": 2,
+        "entity": "users"
+    },
+    {
+        "name": "order_date_format",
+        "type": "date_format",
+        "column": "order_date",
+        "format": "yyyy-MM-dd",
+        "priority": 3,
+        "entity": "orders"
+    },
+
+    
+    {
+        "name": "valid_state_codes",
+        "type": "allowed_values",
+        "column": "state",
+        "allowed_values": ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","NY","TX"],
+        "priority": 2,
+        "entity": "locations"
+    },
+
+    
+    {
+        "name": "price_consistency",
+        "type": "cross_column",
+        "columns": ["original_price", "discounted_price"],
+        "condition": "discounted_price <= original_price",
+        "priority": 1,
+        "entity": "products"
+    },
+
+    
+    {
+        "name": "mandatory_address_fields",
+        "type": "completeness_check",
+        "columns": ["street", "city", "state", "zip_code"],
+        "priority": 1,
+        "entity": "customers"
+    },
+
+    
+    {
+        "name": "valid_product_reference",
+        "type": "referential_integrity",
+        "column": "product_id",
+        "reference_table": "products",
+        "reference_column": "product_id",
+        "priority": 1,
+        "entity": "orders"
+    },
+
+    
+    {
+        "name": "price_outlier_detection",
+        "type": "statistical",
+        "column": "price",
+        "statistic": "z_score",
+        "threshold": 3,
+        "priority": 3,
+        "entity": "products"
+    },
+
+  
+    {
+        "name": "delivery_sla_compliance",
+        "type": "time_difference",
+        "columns": ["order_date", "delivery_date"],
+        "max_duration": "72 HOURS",
+        "priority": 2,
+        "entity": "orders"
+    },
+
+   
+    {
+        "name": "description_length",
+        "type": "length_check",
+        "column": "description",
+        "min_length": 20,
+        "max_length": 2000,
+        "priority": 3,
+        "entity": "products"
+    }
+]
