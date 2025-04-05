@@ -1,0 +1,46 @@
+from schema import Schema, And, Or, Use, Optional, Forbidden
+
+RuleSchema = Schema([{
+    'name': And(str, lambda s: len(s) > 0),
+    'type': And(str, lambda s: s in [
+        'null_check', 
+        'regex_match', 
+        'value_range', 
+        'allowed_values',
+        'data_type',
+        'unique_check',
+        'date_format',
+        'date_range',
+        'cross_column',
+        'referential_integrity',
+        'length_check',
+        'statistical',
+        'time_difference',
+        'completeness_check',
+        'time_range'
+    ]),
+    Optional('column'): Or(str, None),
+    Optional('columns'): And([str], lambda lst: len(lst) > 0),
+    Optional('pattern'): str,
+    Optional('min'): Or(int, float),
+    Optional('max'): Or(int, float),
+    Optional('allowed_values'): [object],
+    Optional('expected_type'): str,
+    Optional('reference_table'): str,
+    Optional('reference_column'): str,
+    Optional('condition'): str,
+    Optional('statistic'): str,
+    Optional('threshold'): Or(int, float),
+    Optional('min_length'): int,
+    Optional('max_length'): int,
+    Optional('format'): str,
+    Optional('min_date'): str,
+    Optional('max_date'): str,
+    Optional('max_duration'): str,
+    'priority': And(int, lambda n: 1 <= n <= 5),
+    Optional('entity'): str,
+    Optional('description'): str,
+    # Add forbidden combinations
+    Forbidden('column'): lambda x: 'columns' in x,
+    Forbidden('columns'): lambda x: 'column' in x
+}])
